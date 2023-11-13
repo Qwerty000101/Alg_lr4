@@ -3,115 +3,120 @@ import numpy as np
 import timeit
 import matplotlib.pyplot as plt
 from math import sqrt
-def corr(arrX,arrY):
-    sigma1=0
-    sigma2=0
-    sigma3=0
-    xSred=0
-    ySred=0
-    sumX=0
-    sumY=0
-    for i in range(len(arrX)):
-        sumX+=arrX[i]
-        sumY+=arrY[i]
-    xSred=sumX/len(arrX)
-    ySred=sumY/len(arrY)
-    for i in range(len(arrX)):
-        sigma1+=(arrX[i]-xSred)*(arrY[i]-ySred)
-        sigma2+=(arrX[i]-xSred)**2
-        sigma3+=(arrY[i]-ySred)**2
-    return sigma1/(sqrt(sigma2)*sqrt(sigma3))
-def minElement(arr):
-    temp=arr[0]
+def correlation(array_of_values_x,array_of_values_y):
+    sigma_first = 0
+    sigma_second = 0
+    sigma_third = 0
+    average_value_x = 0
+    average_value_y = 0
+    sum_x = 0
+    sum_y = 0
+
+    for i in range(len(array_of_values_x)):
+        sum_x += array_of_values_x[i]
+        sum_y += array_of_values_y[i]
+    average_value_x=sum_x/len(array_of_values_x)
+    average_value_y=sum_y/len(array_of_values_y)
+
+    for i in range(len(array_of_values_x)):
+        sigma_first += ((array_of_values_x[i]-average_value_x)* 
+                        (array_of_values_y[i]-average_value_y))
+        sigma_second += (array_of_values_x[i]-average_value_x)**2
+        sigma_third += (array_of_values_y[i]-average_value_y)**2
+
+    pair_correlation_coefficient=sigma_first/(sqrt(sigma_second)*
+                                              sqrt(sigma_third))
+    return pair_correlation_coefficient
+def min_element(arr):
+    temp = arr[0]
+
     for i in range(0,len(arr)):
-        if arr[i]<temp:
-            temp=arr[i]
+        if arr[i] < temp:
+            temp = arr[i]
+
     return temp
-def maxElement(arr):
-    temp=arr[0]
+def max_element(arr):
+    temp = arr[0]
+
     for i in range(0,len(arr)):
-        if arr[i]>temp:
-            temp=arr[i]
+        if arr[i] > temp:
+            temp = arr[i]
+
     return temp
-arrTimeMin=[]
-x=[]
-arrTimeMax=[]
+arr_time_min = []
+x = []
+arr_time_max = []
 for i in range(1,1001):
-    arr2=[0 for i in range(0,i)]
+    arr = [0 for i in range(0,i)]
     x.append(i)
-    for j in range(0,len(arr2)):
-        arr2[j]= random.randint(500,1000)
-        #print(arr2[j],end=" ")
-    timePoisk=(timeit.timeit(lambda: minElement(arr2), number=50))/50
-    print()
-    print("Время поиска наименьшего элемента в массиве из ",i," элементов: ",timePoisk)
-    arrTimeMin.append(timePoisk)
-    timePoisk=(timeit.timeit(lambda: maxElement(arr2), number=50))/50
-    print()
-    print("Время поиска наибольшего элемента в массиве из ",i," элементов: ",timePoisk)
-    arrTimeMax.append(timePoisk)
-    print()
-sumArrTime=sum(arrTimeMin)
-sumX=sum(x)
-kvSumX=0
-sumUmnXY=0
-bn=len(x)
+    for j in range(0,len(arr)):
+        arr[j] = random.randint(500,1000)
+    search_time = (timeit.timeit(lambda: min_element(arr), number = 50))/50
+    print("Время поиска наименьшего элемента в массиве из ",i,
+          " элементов: ",search_time)
+    arr_time_min.append(search_time)
+    search_time = (timeit.timeit(lambda: max_element(arr), number = 50))/50
+    print("Время поиска наибольшего элемента в массиве из ",i,
+          " элементов: ",search_time,"\n")
+    arr_time_max.append(search_time)
+sum_arr_time = sum(arr_time_min)
+sum_x = sum(x)
+sum_sqr_x = 0
+sum_mltp_x_arr_time_min = 0
+bn = len(x)
 for i in x:
-    kvSumX+=i*i
-for i in range(0,len(arrTimeMin)):
-    sumUmnXY+=x[i]*arrTimeMin[i]
-#print("Сумма ",sumArrTime,sumX, kvSumX,sumUmnXY)
-matrix = np.array([[kvSumX, sumX],
-                   [sumX, bn]])
+    sum_sqr_x += i*i
+for i in range(0,len(arr_time_min)):
+    sum_mltp_x_arr_time_min += x[i]*arr_time_min[i]
+matrix = np.array([[sum_sqr_x, sum_x],
+                   [sum_x, bn]])
 det = np.linalg.det(matrix)
-#print("Определитель = ",det)
-matrix1Kramer = np.array([[sumUmnXY, sumX],
-                           [sumArrTime, bn]])
-det1=np.linalg.det(matrix1Kramer)
-matrix2Kramer = np.array([[kvSumX, sumUmnXY],
-                           [sumX, sumArrTime]])
-det2=np.linalg.det(matrix2Kramer)
-koef1=det1/det
-koef2=det2/det
-#print("y=",koef1,"x+",koef2)
+first_matrix_kramer = np.array([[sum_mltp_x_arr_time_min, sum_x],
+                                [sum_arr_time, bn]])
+first_det=np.linalg.det(first_matrix_kramer)
+second_matrix_kramer = np.array([[sum_sqr_x, sum_mltp_x_arr_time_min],
+                                 [sum_x, sum_arr_time]])
+second_det=np.linalg.det(second_matrix_kramer)
+first_coefficient=first_det/det
+second_coefficient=second_det/det
 func=[]
 for i in range(1,1001):
-    func.append(koef1*(i)+koef2)
-#Sredniy sluchai
-sumArrTimeMax=sum(arrTimeMax)
-sumUmnXYMax=0
-for i in range(0,len(arrTimeMax)):
-    sumUmnXYMax+=x[i]*arrTimeMax[i]
-matrixMax = np.array([[kvSumX, sumX],
-                   [sumX, bn]])
-detMax = np.linalg.det(matrix)
-#print("Определитель = ",det)
-matrix1KramerMax = np.array([[sumUmnXYMax, sumX],
-                           [sumArrTimeMax, bn]])
-det1Max=np.linalg.det(matrix1KramerMax)
-matrix2KramerMax = np.array([[kvSumX, sumUmnXYMax],
-                           [sumX, sumArrTimeMax]])
-det2Max=np.linalg.det(matrix2KramerMax)
-koef1Max=det1Max/detMax
-koef2Max=det2Max/detMax
-#print("y=",koef1Bad,"x+",koef2Bad)
-funcMax=[]
+    func.append(first_coefficient*i + second_coefficient)
+sum_arr_time_max=sum(arr_time_max)
+sum_mltp_x_arr_time_max = 0
+for i in range(0,len(arr_time_max)):
+    sum_mltp_x_arr_time_max += x[i]*arr_time_max[i]
+matrixMax = np.array([[sum_sqr_x, sum_x],
+                      [sum_x, bn]])
+det_max = np.linalg.det(matrix)
+first_matrix_kramer_max = np.array([[sum_mltp_x_arr_time_max, sum_x],
+                                    [sum_arr_time_max, bn]])
+first_det_max = np.linalg.det(first_matrix_kramer_max)
+second_matrix_kramer_max = np.array([[sum_sqr_x, sum_mltp_x_arr_time_max],
+                                     [sum_x, sum_arr_time_max]])
+second_det_max = np.linalg.det(second_matrix_kramer_max)
+first_coefficient_max = first_det_max/det_max
+second_coefficient_max = second_det_max/det_max
+func_max = []
 for i in range(1,1001):
-    funcMax.append(koef1Max*(i)+koef2Max)
+    func_max.append(first_coefficient_max*i + second_coefficient_max)
 plt.figure(figsize=(8,6))
 plt.figure(1)
 plt.title("Время поиска наименьшего элемента в массиве")
 plt.plot(x,func,color='red',linewidth=4)
-plt.scatter(x, arrTimeMin,s=3)
-plt.xlabel('Размер массива\n Коэффициент парной корреляции равен:'+str(corr(x,arrTimeMin)))
-plt.legend(['y='+str(koef1)+"x+("+str(koef2)+")"])
+plt.scatter(x, arr_time_min,s=3)
+plt.xlabel("Размер массива\n Коэффициент парной корреляции равен:"  
+           +str(correlation(x,arr_time_min)))
+plt.legend(['y='+str(first_coefficient)+"x+("+str(second_coefficient)+")"])
 plt.ylabel("Время поиска наименьшего элемента в массиве")
 plt.figure(figsize=(8,6))
 plt.figure(2)
 plt.title("Время поиска наибольшего элемента в массиве")
-plt.plot(x,funcMax,color='red',linewidth=4)
-plt.scatter(x,arrTimeMax,s=3)
-plt.xlabel('Размер массива\n Коэффициент парной корреляции равен:'+str(corr(x,arrTimeMax)))
-plt.legend(['y='+str(koef1Max)+"x+("+str(koef2Max)+")"])
+plt.plot(x,func_max,color='red',linewidth=4)
+plt.scatter(x,arr_time_max,s=3)
+plt.xlabel("Размер массива\n Коэффициент парной корреляции равен:"  
+           +str(correlation(x,arr_time_max)))
+plt.legend(['y='+str(first_coefficient_max)+"x+("
+            +str(second_coefficient_max)+")"])
 plt.ylabel("Время поиска наибольшего элемента в массиве")
 plt.show()
