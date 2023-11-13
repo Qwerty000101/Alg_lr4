@@ -116,7 +116,7 @@ plt.plot(x,func_max,color='red',linewidth=4)
 plt.scatter(x,arr_time_max,s=3)
 plt.xlabel("Размер массива\n Коэффициент парной корреляции равен:"  
            +str(correlation(x,arr_time_max)))
-plt.legend(['y='+str(first_coefficient_max)+"x+("
+plt.legend(["y="+str(first_coefficient_max)+"x+("
             +str(second_coefficient_max)+")"])
 plt.ylabel("Время поиска наибольшего элемента в массиве")
 plt.show()
