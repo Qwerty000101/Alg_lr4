@@ -17,8 +17,8 @@ def correlation(array_of_values_x,array_of_values_y):
     for i in range(len(array_of_values_x)):
         sum_x += array_of_values_x[i]
         sum_y += array_of_values_y[i]
-    average_value_x=sum_x/len(array_of_values_x)
-    average_value_y=sum_y/len(array_of_values_y)
+    average_value_x = sum_x/len(array_of_values_x)
+    average_value_y = sum_y/len(array_of_values_y)
 
     for i in range(len(array_of_values_x)):
         sigma_first += ((array_of_values_x[i]-average_value_x)* 
@@ -26,7 +26,7 @@ def correlation(array_of_values_x,array_of_values_y):
         sigma_second += (array_of_values_x[i]-average_value_x)**2
         sigma_third += (array_of_values_y[i]-average_value_y)**2
 
-    pair_correlation_coefficient=sigma_first/(sqrt(sigma_second)*
+    pair_correlation_coefficient = sigma_first/(sqrt(sigma_second)*
                                               sqrt(sigma_third))
     return pair_correlation_coefficient
 def min_element(arr):
@@ -75,16 +75,16 @@ matrix = np.array([[sum_sqr_x, sum_x],
 det = np.linalg.det(matrix)
 first_matrix_kramer = np.array([[sum_mltp_x_arr_time_min, sum_x],
                                 [sum_arr_time, bn]])
-first_det=np.linalg.det(first_matrix_kramer)
+first_det = np.linalg.det(first_matrix_kramer)
 second_matrix_kramer = np.array([[sum_sqr_x, sum_mltp_x_arr_time_min],
                                  [sum_x, sum_arr_time]])
-second_det=np.linalg.det(second_matrix_kramer)
-first_coefficient=first_det/det
-second_coefficient=second_det/det
-func=[]
+second_det = np.linalg.det(second_matrix_kramer)
+first_coefficient = first_det/det
+second_coefficient = second_det/det
+func = []
 for i in range(1,1001):
     func.append(first_coefficient*i + second_coefficient)
-sum_arr_time_max=sum(arr_time_max)
+sum_arr_time_max = sum(arr_time_max)
 sum_mltp_x_arr_time_max = 0
 for i in range(0,len(arr_time_max)):
     sum_mltp_x_arr_time_max += x[i]*arr_time_max[i]
