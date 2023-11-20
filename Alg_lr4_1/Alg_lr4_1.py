@@ -1,4 +1,6 @@
-﻿import random
+﻿#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+import random
 import numpy as np
 import timeit
 import matplotlib.pyplot as plt
